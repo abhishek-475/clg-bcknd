@@ -1,4 +1,3 @@
-// routes/faculty.js - UPDATED VERSION
 const express = require('express');
 const Faculty = require('../models/Faculty');
 const Course = require('../models/Course');
@@ -32,11 +31,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const facultyMember = await Faculty.findById(req.params.id)
-      .populate('user', 'name email profile avatar')
-      .populate({
-        path: 'courses',
-        model: 'Course'
-      });
+      .populate('user', 'name email profile avatar');
 
     if (!facultyMember) {
       return res.status(404).json({ 
