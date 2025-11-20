@@ -16,237 +16,122 @@ const seedData = async () => {
     await Event.deleteMany({});
     await Faculty.deleteMany({});
 
-    // Create sample users
-    const studentUser = await User.create({
-      name: 'John Student',
-      email: 'student@edutech.edu',
-      password: 'password123',
-      role: 'student',
-      profile: {
-        phone: '+1234567890',
-        department: 'Computer Science',
-        semester: '3',
-        address: {
-          street: '123 Student St',
-          city: 'Education City',
-          state: 'EC',
-          zipCode: '12345'
-        }
-      }
-    });
-
-    const facultyUser = await User.create({
-      name: 'Dr. Sarah Professor',
-      email: 'faculty@edutech.edu',
-      password: 'password123',
-      role: 'faculty',
-      profile: {
-        phone: '+1234567891',
-        department: 'Computer Science',
-        address: {
-          street: '456 Faculty Ave',
-          city: 'Education City',
-          state: 'EC',
-          zipCode: '12345'
-        }
-      }
-    });
-
+    // ----- Create Admin -----
     const adminUser = await User.create({
       name: 'Admin User',
       email: 'admin@edutech.edu',
       password: 'password123',
       role: 'admin',
-      profile: {
-        phone: '+1234567892',
-        department: 'Administration'
-      }
+      profile: { phone: '+1234567892', department: 'Administration' }
     });
 
-    // Create faculty profile
-    const facultyProfile = await Faculty.create({
-      user: facultyUser._id,
-      employeeId: 'FAC001',
-      department: 'Computer Science',
-      designation: 'Professor',
-      qualifications: [
-        {
-          degree: 'PhD in Computer Science',
-          institution: 'Tech University',
-          year: 2015
-        },
-        {
-          degree: 'MSc in Software Engineering',
-          institution: 'Engineering College',
-          year: 2010
-        }
-      ],
-      specialization: ['Artificial Intelligence', 'Machine Learning', 'Data Science'],
-      experience: {
-        years: 12,
-        description: 'Extensive experience in AI research and teaching'
-      },
-      researchInterests: ['Deep Learning', 'Natural Language Processing', 'Computer Vision'],
-      publications: [
-        {
-          title: 'Advanced Machine Learning Techniques',
-          journal: 'International Journal of AI',
-          year: 2023,
-          link: 'https://example.com/publication1'
-        }
-      ],
-      officeHours: [
-        {
-          day: 'Monday',
-          startTime: '10:00',
-          endTime: '12:00'
-        },
-        {
-          day: 'Wednesday',
-          startTime: '14:00',
-          endTime: '16:00'
-        }
-      ],
-      officeLocation: 'CS Building Room 301',
-      phoneExtension: '4567'
-    });
+    // ----- Create Faculty -----
+    const departments = ['Computer Science', 'Mathematics', 'Physics', 'Chemistry'];
+    const facultyUsers = [];
+    const facultyProfiles = [];
 
-    // Create sample courses
-    const courses = await Course.create([
-      {
-        title: 'Introduction to Programming',
-        code: 'CS101',
-        description: 'Fundamental concepts of programming and problem solving using Python.',
-        credits: 3,
-        department: 'Computer Science',
-        semester: '1',
-        faculty: facultyUser._id,
-        capacity: 30,
-        syllabus: [
-          {
-            topic: 'Programming Basics',
-            duration: '3 weeks',
-            objectives: ['Understand basic syntax', 'Learn control structures', 'Write simple programs']
-          },
-          {
-            topic: 'Data Structures',
-            duration: '4 weeks',
-            objectives: ['Learn arrays and lists', 'Understand dictionaries', 'Implement basic algorithms']
+    for (let i = 1; i <= 10; i++) {
+      const dept = departments[i % departments.length];
+      const user = await User.create({
+        name: `Faculty ${i}`,
+        email: `faculty${i}@edutech.edu`,
+        password: 'password123',
+        role: 'faculty',
+        profile: {
+          phone: '+12345000' + i,
+          department: dept,
+          address: {
+            street: `${i} Faculty Street`,
+            city: 'Education City',
+            state: 'EC',
+            zipCode: '12345'
           }
-        ],
-        schedule: {
-          days: ['Monday', 'Wednesday', 'Friday'],
-          time: '09:00-10:00',
-          classroom: 'CS-101'
         }
-      },
-      {
-        title: 'Web Development',
-        code: 'CS201',
-        description: 'Comprehensive course on modern web development technologies including HTML, CSS, and JavaScript.',
-        credits: 4,
-        department: 'Computer Science',
-        semester: '2',
-        faculty: facultyUser._id,
-        capacity: 25,
-        syllabus: [
-          {
-            topic: 'HTML & CSS',
-            duration: '3 weeks',
-            objectives: ['Create semantic HTML', 'Style with CSS', 'Responsive design']
-          },
-          {
-            topic: 'JavaScript Fundamentals',
-            duration: '4 weeks',
-            objectives: ['DOM manipulation', 'Event handling', 'Async programming']
-          }
-        ],
-        schedule: {
-          days: ['Tuesday', 'Thursday'],
-          time: '14:00-16:00',
-          classroom: 'CS-201'
-        }
-      },
-      {
-        title: 'Data Structures and Algorithms',
-        code: 'CS301',
-        description: 'Advanced course covering fundamental data structures and algorithm design techniques.',
-        credits: 4,
-        department: 'Computer Science',
-        semester: '3',
-        faculty: facultyUser._id,
-        capacity: 20,
-        syllabus: [
-          {
-            topic: 'Basic Data Structures',
-            duration: '4 weeks',
-            objectives: ['Arrays and Linked Lists', 'Stacks and Queues', 'Hash Tables']
-          }
-        ],
-        schedule: {
-          days: ['Monday', 'Wednesday'],
-          time: '11:00-13:00',
-          classroom: 'CS-301'
-        }
-      }
-    ]);
+      });
 
-    // Create sample events
-    const events = await Event.create([
-      {
-        title: 'Annual Tech Symposium',
-        description: 'Join us for our annual technology symposium featuring talks from industry experts and student project demonstrations.',
-        date: new Date('2024-03-15T09:00:00'),
-        endDate: new Date('2024-03-15T17:00:00'),
-        venue: 'Main Auditorium',
-        type: 'conference',
-        organizer: 'Computer Science Department',
-        maxParticipants: 200,
-        registrationDeadline: new Date('2024-03-10T23:59:59'),
-        tags: ['technology', 'innovation', 'networking'],
-        requirements: ['Registration required', 'College ID mandatory'],
-        contactInfo: {
-          name: 'Tech Events Committee',
-          email: 'tech-events@edutech.edu',
-          phone: '+1234567893'
-        }
-      },
-      {
-        title: 'Web Development Workshop',
-        description: 'Hands-on workshop covering modern web development tools and frameworks.',
-        date: new Date('2024-02-20T14:00:00'),
-        venue: 'Computer Lab 2',
-        type: 'workshop',
-        organizer: 'CS Student Club',
-        maxParticipants: 30,
-        registrationDeadline: new Date('2024-02-18T23:59:59'),
-        tags: ['web development', 'hands-on', 'beginner-friendly'],
-        contactInfo: {
-          name: 'Student Club President',
-          email: 'club@edutech.edu'
-        }
-      },
-      {
-        title: 'Cultural Fest 2024',
-        description: 'Annual cultural festival showcasing diverse talents and traditions from around the world.',
-        date: new Date('2024-04-05T10:00:00'),
-        endDate: new Date('2024-04-07T22:00:00'),
-        venue: 'College Grounds',
-        type: 'cultural',
-        organizer: 'Cultural Committee',
-        maxParticipants: 500,
-        tags: ['culture', 'festival', 'entertainment'],
-        contactInfo: {
-          name: 'Cultural Committee',
-          email: 'cultural@edutech.edu'
-        }
-      }
-    ]);
+      const facultyProfile = await Faculty.create({
+        user: user._id,
+        employeeId: `FAC${100 + i}`,
+        department: dept,
+        designation: i % 2 === 0 ? 'Professor' : 'Lecturer',
+        specialization: i % 2 === 0 ? ['AI', 'ML'] : ['Calculus', 'Algebra'],
+        experience: { years: Math.floor(Math.random() * 10 + 5), description: 'Experienced in teaching and research' },
+        researchInterests: ['Research Topic A', 'Research Topic B'],
+        officeHours: [
+          { day: 'Monday', startTime: '10:00', endTime: '12:00' },
+          { day: 'Wednesday', startTime: '14:00', endTime: '16:00' }
+        ],
+        officeLocation: `${dept} Building`,
+        phoneExtension: '' + Math.floor(Math.random() * 9000 + 1000)
+      });
 
-    console.log('Sample data created successfully!');
-    console.log('Student login: student@edutech.edu / password123');
-    console.log('Faculty login: faculty@edutech.edu / password123');
+      facultyUsers.push(user);
+      facultyProfiles.push(facultyProfile);
+    }
+
+    // ----- Create Students -----
+    const studentUsers = [];
+    for (let i = 1; i <= 20; i++) {
+      const dept = departments[i % departments.length];
+      const student = await User.create({
+        name: `Student ${i}`,
+        email: `student${i}@edutech.edu`,
+        password: 'password123',
+        role: 'student',
+        profile: {
+          phone: '+98765000' + i,
+          department: dept,
+          semester: `${Math.floor(Math.random() * 8 + 1)}`,
+          address: {
+            street: `${i} Student Lane`,
+            city: 'Education City',
+            state: 'EC',
+            zipCode: '12345'
+          }
+        }
+      });
+      studentUsers.push(student);
+    }
+
+    // ----- Create Courses -----
+    const courses = [];
+    for (let i = 1; i <= 20; i++) {
+      const dept = departments[i % departments.length];
+      const faculty = facultyUsers[i % facultyUsers.length];
+      const course = await Course.create({
+        title: `${dept} Course ${i}`,
+        code: `${dept.substring(0, 3).toUpperCase()}${100 + i}`,
+        description: `Detailed syllabus for ${dept} Course ${i}`,
+        credits: 3 + (i % 2),
+        department: dept,
+        semester: `${(i % 8) + 1}`,
+        faculty: faculty._id,
+        capacity: 20 + (i % 10)
+      });
+      courses.push(course);
+    }
+
+    // ----- Create Events -----
+    const events = [];
+    for (let i = 1; i <= 20; i++) {
+      const dept = departments[i % departments.length];
+      const event = await Event.create({
+        title: `${dept} Event ${i}`,
+        description: `Description of ${dept} Event ${i}`,
+        date: new Date(`2024-0${(i % 9) + 1}-10T09:00:00`),
+        endDate: new Date(`2024-0${(i % 9) + 1}-10T17:00:00`),
+        venue: `${dept} Hall ${i}`,
+        type: i % 2 === 0 ? 'workshop' : 'conference',
+        organizer: `${dept} Department`,
+        maxParticipants: 20 + (i * 5)
+      });
+      events.push(event);
+    }
+
+    console.log('Seed data created successfully!');
     console.log('Admin login: admin@edutech.edu / password123');
+    facultyUsers.forEach(f => console.log(`Faculty login: ${f.email} / password123`));
+    studentUsers.forEach(s => console.log(`Student login: ${s.email} / password123`));
 
   } catch (error) {
     console.error('Error seeding data:', error);
